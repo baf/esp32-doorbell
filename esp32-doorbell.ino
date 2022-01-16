@@ -154,13 +154,13 @@ void loop()
   // Try to reconnect to MQTT each time around the loop, in case we disconnect
   while (!client.connected())
   {
-    log_msg("Connecting to MQTT Server " + String(mqttServer));
+    log_msg("Connecting to MQTT Server " + String(mqttServer) + " with username " + String(mqttUsername));
 
     // Generate a random ID each time
     String clientId = "ESP32Client-" + String(macstr) + "-";
     clientId += String(random(0xffff), HEX);
 
-    if (client.connect(clientId.c_str()))
+    if (client.connect(clientId.c_str(),mqttUsername,mqttPassword))
     {
       String msg="MQTT connected at ";
       time_t now = time(nullptr);
@@ -172,6 +172,7 @@ void loop()
     }
     else
     {
+      log_msg("failed")
       log_msg("failed with state " + client.state());
       delay(2000);
     }
